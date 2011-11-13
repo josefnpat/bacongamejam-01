@@ -20,3 +20,6 @@ Setting up a server:
   Make a new MySQL database, and insert the structure.sql to it.
   Configure the server-config.php to that MySQL database
   Configure a server.lua and distribute it.
+
+NOTES:
+  Some have noticed that there are server lags. Try unzipping thee folder, otherwise your OS is probably blocking the http request.
