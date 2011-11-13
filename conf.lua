@@ -1,4 +1,5 @@
 function love.conf(t)
+  t.title = "Flight 1942"
   t.author = "josefnpat"        -- The author of the game (string)
   t.identity = nil            -- The name of the save directory (string)
   t.version = 0               -- The LÖVE version this game was made for (number)

@@ -11,11 +11,11 @@ function love.load()
   img_enemy = love.graphics.newImage( "assets/enemy.png" )
   img_bullet = {}
   img_bullet[0] = love.graphics.newImage( "assets/bullet-0.png" )
-  title_font = love.graphics.newFont( "assets/octin_spraypaint.ttf", 128 )
+  title_font = love.graphics.newFont( "assets/octinspraypaint.ttf", 128 )
   game_font = love.graphics.newFont( "assets/graphicpixel.ttf", 64 )
   small_game_font = love.graphics.newFont( "assets/graphicpixel.ttf", 16 )
   state = "title_screen"
-  game_name = 'Flight 1942';
+  game_name = t.title --'Flight 1942';
   menu_select_option = 0
   com = love.thread.newThread( "dl", "com_thread.lua" )
   com:start()
@@ -128,12 +128,12 @@ function love.update()
   if state == "game" then
     com_send()
     local inc = com_recieve()
-    if debug then
-      if inc and inc ~= "" then
+    if inc and inc ~= "" then
+      if debug then
         print(inc)
       end
     end
-    com_send_data = "info"
+    com_send_data = "pull"
   end
 end
 
