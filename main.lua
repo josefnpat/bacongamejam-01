@@ -13,6 +13,8 @@ function love.load()
   title_font = love.graphics.newFont( "assets/octinspraypaint.ttf", 128 )
   game_font = love.graphics.newFont( "assets/graphicpixel.ttf", 64 )
   small_game_font = love.graphics.newFont( "assets/graphicpixel.ttf", 16 )
+  health_on = love.graphics.newImage( "assets/health_on.png" )
+  health_off = love.graphics.newImage( "assets/health_off.png" )
   state = "title_screen"
   game_name = love.graphics.getCaption( )
   menu_select_option = 0
@@ -34,10 +36,78 @@ function love.draw()
     menu_max = #options
     game_menu(options)
   elseif state == "game" then
-    
+    game_draw_bullets()
+    game_draw_players()
+    game_draw_owner()
+    game_draw_enemies()
+    game_draw_health()
   else
     style_instructions()
     love.graphics.print("Unknown State `"..state.."`", 0, 0)
+  end
+  if debug then
+    love.graphics.print("FPS:"..love.timer.getFPS( ),400,0);
+  end
+end
+
+health = nil
+maxhealth = nil
+function game_draw_health()
+  if health and maxhealth then
+    for i = 1,maxhealth do
+      if i <= health then
+        love.graphics.draw(health_on,i*32-16,16)
+      else
+        love.graphics.draw(health_off,i*32-16,16)
+      end
+    end
+  end
+end
+
+function game_draw_players()
+  if game_data and game_data.players then
+    for i,v in ipairs(game_data.players) do
+      local x = v.x + v.v_x * (love.timer.getMicroTime() - game_data_time)
+      local y = v.y + v.v_y * (love.timer.getMicroTime() - game_data_time)
+      love.graphics.draw(determine_player_dir(v.v_x),x,y)
+    end
+  end
+end
+function game_draw_owner()
+  if game_data and game_data.x then
+    local x = game_data.x + game_data.v_x * (love.timer.getMicroTime() - game_data_time)
+    local y = game_data.y + game_data.v_y * (love.timer.getMicroTime() - game_data_time)
+    love.graphics.draw(determine_player_dir(game_data.v_x),x,y)
+  end
+end
+
+function determine_player_dir(v_x)
+  if v_x > 0 then
+    return img_player_right
+  elseif v_x < 0 then
+    return img_player_left
+  else
+    return img_player_center
+  end
+end
+
+function game_draw_enemies()
+  if game_data and game_data.enemies then
+    for i,v in ipairs(game_data.enemies) do
+      local x = v.x + v.v_x * (love.timer.getMicroTime() - game_data_time)
+      local y = v.y + v.v_y * (love.timer.getMicroTime() - game_data_time)
+      love.graphics.draw(img_enemy,x,y)
+    end
+  end
+end
+
+function game_draw_bullets()
+  if game_data and game_data.bullets then
+    for i,v in ipairs(game_data.bullets) do
+      local x = v.x + v.v_x * (love.timer.getMicroTime() - game_data_time)
+      local y = v.y + v.v_y * (love.timer.getMicroTime() - game_data_time)
+      love.graphics.draw(img_bullet[0],x,y)
+    end
   end
 end
 
@@ -65,6 +135,7 @@ end
 
 menu_max = 0
 join_server_buffer = ""
+game_keyb = {}
 function love.keypressed(key)
   if key == "up" then
     if menu_select_option == 0 then
@@ -121,7 +192,23 @@ function love.keypressed(key)
   elseif state == "game" then
     if key == "escape" then
       state = "title_screen"
+    elseif key == "left" then
+      
+    elseif key == "right" then
+      
+    elseif key == " " then
+      
     end
+  end
+end
+
+function love.keyreleased(key)
+  if key == "left" then
+    
+  elseif key == "right" then
+    
+  elseif key == " " then
+    
   end
 end
 
@@ -136,6 +223,7 @@ function love.update()
         status = "Error: Cannot decode json [ "..inc.." ]"
         print(status)
       else
+        game_data_time = love.timer.getMicroTime( )
         if game_data.console then
           print(game_data.console)
         end
@@ -144,10 +232,18 @@ function love.update()
           print("uid:"..uid)
         end
       end
-      print('recieved data.')  
     end
     com_send_data.cmd = "pull"
     com_send_data.uid = uid
+    update_game_objects()
+  end
+end
+
+function update_game_objects()
+  if game_data then
+    health = game_data.health
+    maxhealth = game_data.maxhealth
+--    print_r(game_data)
   end
 end
 
@@ -191,5 +287,14 @@ function in_table ( needle, haystack )
     if (v==needle) then
       return true
     end
+  end
+end
+
+function print_r (t, indent) -- alt version, abuse to http://richard.warburton.it
+  local indent=indent or ''
+  for key,value in pairs(t) do
+    io.write(indent,'[',tostring(key),']') 
+    if type(value)=="table" then io.write(':\n') print_r(value,indent..'\t')
+    else io.write(' = ',tostring(value),'\n') end
   end
 end

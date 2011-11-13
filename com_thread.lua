@@ -13,7 +13,7 @@ while true do
   if input_data then
     local url = server.url .. "?i=" .. input_data
     server_data = http.request(url)
-    debug_delay(0.12) --add 120ms delay
+    debug_delay(1.12) --add 120ms delay
     this_thread:send("output", server_data)
   end
 end
