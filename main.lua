@@ -1,3 +1,4 @@
+require("json/json")
 server = {}
 require("servers")
 
@@ -12,8 +13,10 @@ function love.load()
   game_font = love.graphics.newFont( "assets/graphicpixel.ttf", 64 )
   small_game_font = love.graphics.newFont( "assets/graphicpixel.ttf", 16 )
   state = "title_screen"
-  game_name = 'Love 1942';
+  game_name = 'Flight 1942';
   menu_select_option = 0
+  com = love.thread.newThread( "dl", "com_thread.lua" )
+  com:start()
 end
 
 function love.draw()
@@ -26,7 +29,6 @@ function love.draw()
     menu_max = #options
     game_menu(options)
   elseif state == "join_server" then
-    
     local options = {server.name,"Back"}
     menu_max = #options
     game_menu(options)
