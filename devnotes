@@ -1,0 +1,14 @@
+This devnote's password is: blah123
+
+This game's theme is: Flight
+
+NES 1942 remake but 64+ players
+8-bit
+http://www.youtube.com/watch?v=FTTR6U2a9dg
+
+Technologies we can use:
+  Client:
+    Love2d with lua scripting
+  Server
+    Lua (Consistency and less language differences)
+    PHP (portability)
