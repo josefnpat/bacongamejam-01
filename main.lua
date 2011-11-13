@@ -132,15 +132,22 @@ function love.update()
     com_send()
     local inc = com_recieve()
     if inc and inc ~= "" then
-      game_data = json.decode(inc)
-      if game_data.console then
-        print(game_data.console)
-        uid = game_data.uid
-        print("uid:"..uid)
+      if not pcall (function () game_data = json.decode(inc) end) then
+        status = "Error: Cannot decode json [ "..inc.." ]"
+        print(status)
+      else
+        if game_data.console then
+          print(game_data.console)
+        end
+        if game_data.uid then
+          uid = game_data.uid
+          print("uid:"..uid)
+        end
       end
-      print('recieved data.')      
+      print('recieved data.')  
     end
     com_send_data.cmd = "pull"
+    com_send_data.uid = uid
   end
 end
 
