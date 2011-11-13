@@ -112,8 +112,30 @@ function love.keypressed(key)
   end
 end
 
+com_send_data = "Hello Word"
+com_waiting = false
+function com_send()
+  if not com_waiting then
+    com_waiting = true
+    com:send("input",com_send_data);
+    com_send_data = ""
+  end
+end
+
+function com_recieve()
+  if com_waiting == true then
+    local receive = com:receive("output");
+    if receive then
+      com_waiting = false
+      return receive
+    end
+  end
+end
+
+
 function love.update()
-  --if 
+  com_send()
+  local inc = com_recieve()
 end
 
 function style_title()
