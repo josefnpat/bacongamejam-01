@@ -46,6 +46,7 @@ function love.draw()
     love.graphics.print("Unknown State `"..state.."`", 0, 0)
   end
   if debug then
+    style_menu()
     love.graphics.print("FPS:"..love.timer.getFPS( ),400,0);
   end
 end
@@ -240,6 +241,13 @@ function love.update()
     end
     com_send_data.cmd = "pull"
     com_send_data.uid = uid
+    if game_keyb.left then
+      com_send_data.left = true
+    elseif game_keyb.right then
+      com_send_data.right = true
+    elseif game_keyb.space then
+      com_send_data.space = true
+    end
     update_game_objects()
   end
 end

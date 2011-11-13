@@ -22,6 +22,7 @@ if($input->cmd == "info"){
   $data->y = 500;
   $data->v_x = 0;
   $data->v_y = 0;
+  $data->time = microtime(1);
   $data->enemies = array();
   for($i = 0; $i < 10; $i++){
     $enemy = new stdClass();
