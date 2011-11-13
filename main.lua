@@ -1,5 +1,4 @@
 debug = true
-
 require("json/json")
 server = {}
 require("server")
@@ -34,6 +33,8 @@ function love.draw()
     local options = {server.name,"Back"}
     menu_max = #options
     game_menu(options)
+  elseif state == "game" then
+    
   else
     style_instructions()
     love.graphics.print("Unknown State `"..state.."`", 0, 0)
@@ -110,7 +111,7 @@ function love.keypressed(key)
     elseif key == " " then
       if menu_select_option == 0 then
         state = "game"
-        com_send_data = "info"
+        com_send_data.cmd = "info"
         menu_select_option = 0
       else -- if menu_select_option == 1
         state = "title_screen"
@@ -124,26 +125,32 @@ function love.keypressed(key)
   end
 end
 
+game_data = nil
+uid = nil
 function love.update()
   if state == "game" then
     com_send()
     local inc = com_recieve()
     if inc and inc ~= "" then
-      if debug then
-        print(inc)
+      game_data = json.decode(inc)
+      if game_data.console then
+        print(game_data.console)
+        uid = game_data.uid
+        print("uid:"..uid)
       end
+      print('recieved data.')      
     end
-    com_send_data = "pull"
+    com_send_data.cmd = "pull"
   end
 end
 
-com_send_data = ""
+com_send_data = {}
 com_waiting = false
 function com_send()
   if not com_waiting then
     com_waiting = true
-    com:send("input",com_send_data);
-    com_send_data = ""
+    com:send("input",json.encode(com_send_data));
+    com_send_data = {}
   end
 end
 
