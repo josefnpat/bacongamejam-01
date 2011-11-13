@@ -41,13 +41,19 @@ function love.draw()
     game_draw_owner()
     game_draw_enemies()
     game_draw_health()
+    if game_data then
+      if game_data.points and game_data.pointsum then
+        style_menu()
+        love.graphics.print(game_data.points.."/"..game_data.pointsum,16,48);
+      end
+    end
   else
     style_instructions()
     love.graphics.print("Unknown State `"..state.."`", 0, 0)
   end
   if debug then
-    style_menu()
-    love.graphics.print("FPS:"..love.timer.getFPS( ),400,0);
+    style_instructions()
+    love.graphics.print("FPS:"..love.timer.getFPS( ),0,0);
   end
 end
 
@@ -70,7 +76,7 @@ function game_draw_players()
     for i,v in ipairs(game_data.players) do
       local x = v.x + v.v_x * (love.timer.getMicroTime() - game_data_time)
       local y = v.y + v.v_y * (love.timer.getMicroTime() - game_data_time)
-      love.graphics.draw(determine_player_dir(v.v_x),x,y)
+      love.graphics.draw(determine_player_dir(v.v_x),x,y,0,1,1,64,32)
     end
   end
 end
@@ -78,7 +84,7 @@ function game_draw_owner()
   if game_data and game_data.x then
     local x = game_data.x + game_data.v_x * (love.timer.getMicroTime() - game_data_time)
     local y = game_data.y + game_data.v_y * (love.timer.getMicroTime() - game_data_time)
-    love.graphics.draw(determine_player_dir(game_data.v_x),x,y)
+    love.graphics.draw(determine_player_dir(game_data.v_x),x,y,0,1,1,64,32)
   end
 end
 
@@ -97,7 +103,7 @@ function game_draw_enemies()
     for i,v in ipairs(game_data.enemies) do
       local x = v.x + v.v_x * (love.timer.getMicroTime() - game_data_time)
       local y = v.y + v.v_y * (love.timer.getMicroTime() - game_data_time)
-      love.graphics.draw(img_enemy,x,y)
+      love.graphics.draw(img_enemy,x,y,0,1,1,32,32)
     end
   end
 end
@@ -107,7 +113,7 @@ function game_draw_bullets()
     for i,v in ipairs(game_data.bullets) do
       local x = v.x + v.v_x * (love.timer.getMicroTime() - game_data_time)
       local y = v.y + v.v_y * (love.timer.getMicroTime() - game_data_time)
-      love.graphics.draw(img_bullet[0],x,y)
+      love.graphics.draw(img_bullet[0],x,y,0,1,1,8,16)
     end
   end
 end
@@ -226,8 +232,7 @@ function love.update()
     local inc = com_recieve()
     if inc and inc ~= "" then
       if not pcall (function () game_data = json.decode(inc) end) then
-        status = "Error: Cannot decode json [ "..inc.." ]"
-        print(status)
+        print("Error: Cannot decode json [ "..inc.." ]")
       else
         game_data_time = love.timer.getMicroTime( )
         if game_data.console then
@@ -241,13 +246,9 @@ function love.update()
     end
     com_send_data.cmd = "pull"
     com_send_data.uid = uid
-    if game_keyb.left then
-      com_send_data.left = true
-    elseif game_keyb.right then
-      com_send_data.right = true
-    elseif game_keyb.space then
-      com_send_data.space = true
-    end
+    com_send_data.left = game_keyb.left
+    com_send_data.right = game_keyb.right
+    com_send_data.space = game_keyb.space
     update_game_objects()
   end
 end
