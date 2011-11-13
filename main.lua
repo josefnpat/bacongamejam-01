@@ -15,7 +15,7 @@ function love.load()
   game_font = love.graphics.newFont( "assets/graphicpixel.ttf", 64 )
   small_game_font = love.graphics.newFont( "assets/graphicpixel.ttf", 16 )
   state = "title_screen"
-  game_name = t.title --'Flight 1942';
+  game_name = love.graphics.getCaption( )
   menu_select_option = 0
   com = love.thread.newThread( "dl", "com_thread.lua" )
   com:start()
