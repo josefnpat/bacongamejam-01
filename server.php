@@ -1,14 +1,7 @@
 <?php
 error_reporting(-1);
 
-// CONFIG
-
-$mysql_host = "localhost";
-$mysql_user = "user";
-$mysql_pass = "";
-$mysql_dtbs = "bacongamejam-01";
-
-// END OF CONFIG
+require("server-config.php");
 
 $link = mysql_connect($mysql_host,$mysql_user,$mysql_pass) or die('Could not connect: ' . mysql_error());
 mysql_select_db($mysql_dtbs) or die('Could not select database');
@@ -70,9 +63,9 @@ $result = mysql_query($query) or die('Query failed: ' . mysql_error());
 $line = mysql_fetch_array($result, MYSQL_ASSOC);
 
 $max_enemy = ($pointsum/10 + 10);
-$data->console = $max_enemy;
+
 if( $line['COUNT(*)'] < $max_enemy ){
-  $query = "INSERT INTO  `objects` ( `type` , `lastupdate` , `x` ,  `y` ,  `v_x` , `v_y` ) VALUES (  'enemy',  '".microtime(1)."',  '".rand(32,800-32)."',  '-127',  '0',  '".(rand(50,150))."' )";
+  $query = "INSERT INTO  `objects` ( `type` , `lastupdate` , `x` ,  `y` ,  `v_x` , `v_y` ) VALUES (  'enemy',  '".microtime(1)."',  '".rand(32,800-32)."',  '-127',  '".(rand(-50,50))."',  '".(rand(40,140)+$max_enemy)."' )";
   mysql_query($query) or die('Query failed: ' . mysql_error());
 }
 

@@ -4,6 +4,9 @@ server = {}
 require("server")
 
 function love.load()
+  img_icon = love.graphics.newImage( "assets/icon.png" )
+  love.graphics.setIcon( img_icon )
+  img_bg = love.graphics.newImage( "assets/stars.gif" )
   img_player_center = love.graphics.newImage( "assets/player-center.png" )
   img_player_left = love.graphics.newImage( "assets/player-left.png" )
   img_player_right = love.graphics.newImage( "assets/player-right.png" )
@@ -23,6 +26,12 @@ function love.load()
 end
 
 function love.draw()
+  for i = 0,3 do
+    for j = -1,2 do
+--    bg_scroll = 0
+      love.graphics.draw(img_bg,200*i,200*j+(bg_scroll%200));
+    end
+  end
   if state == "title_screen" then
     local options = {"Join Server","Options","Exit"}
     menu_max = #options
@@ -46,6 +55,10 @@ function love.draw()
         style_menu()
         love.graphics.print(game_data.points.."/"..game_data.pointsum,16,48);
       end
+    end
+    if info then
+      style_instructions()
+      love.graphics.print(info,16,300);
     end
   else
     style_instructions()
@@ -226,8 +239,21 @@ end
 
 game_data = nil
 uid = nil
-function love.update()
+bg_scroll = 0
+bg_scroll_dt = 0
+info = nil
+function love.update(dt)
+  bg_scroll_dt = bg_scroll_dt + dt
+  if bg_scroll_dt > 0.01 then
+    bg_scroll_dt = 0
+    bg_scroll = bg_scroll + 1
+  end
   if state == "game" then
+    if not game_data then
+      info = "connecting to server "..server.name.." ["..server.url.."]"
+    else
+      info = nil
+    end
     com_send()
     local inc = com_recieve()
     if inc and inc ~= "" then

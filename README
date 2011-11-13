@@ -1,1 +1,22 @@
-I'm so excited!
+A spin off of the NES 1942, but with spaceships. Also, it runs off a php server, and can support as many players as your server can.
+
+This game was submitted for the BaconGameJam-01: http://bacongamejam.org/jams/bacongamejam-01/flight-2942/
+
+PROGRAMMING - Josefnpat
+ARTWORK - DrSulfurious
+
+Client:
+  Just run the folder with the love2d engine.
+
+Server:
+  Either configure the server.lua to connect.
+  Localhost Sample File:
+    server-localhost.lua 
+  Cupm Defualt::
+    server-cupm.lua 
+
+Setting up a server:
+  Upload the server.php, server-config.php to the server.
+  Make a new MySQL database, and insert the structure.sql to it.
+  Configure the server-config.php to that MySQL database
+  Configure a server.lua and distribute it.
