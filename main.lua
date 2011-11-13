@@ -136,6 +136,9 @@ end
 menu_max = 0
 join_server_buffer = ""
 game_keyb = {}
+game_keyb.left = false;
+game_keyb.right = false;
+game_keyb.space = false;
 function love.keypressed(key)
   if key == "up" then
     if menu_select_option == 0 then
@@ -193,22 +196,24 @@ function love.keypressed(key)
     if key == "escape" then
       state = "title_screen"
     elseif key == "left" then
-      
+      game_keyb.left = true
     elseif key == "right" then
-      
+      game_keyb.right = true
     elseif key == " " then
-      
+      game_keyb.space = true
     end
   end
 end
 
 function love.keyreleased(key)
-  if key == "left" then
-    
-  elseif key == "right" then
-    
-  elseif key == " " then
-    
+  if state == "game" then
+    if key == "left" then
+      game_keyb.left = false
+    elseif key == "right" then
+      game_keyb.right = false
+    elseif key == " " then
+      game_keyb.space = false
+    end
   end
 end
 
