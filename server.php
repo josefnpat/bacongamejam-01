@@ -44,9 +44,9 @@ if(isset($input->space)){
     if(microtime(1)-$user['lastbullet']>0.25){
       $query3 = "UPDATE  `users` SET  `lastbullet` = ".microtime(1)." WHERE  `uid` = '".$input->uid."'";
       mysql_query($query3) or die('Query failed: ' . mysql_error());
-      $query = "INSERT INTO  `objects` (`type` ,`lastupdate` ,`x` ,`y` ,`v_x` ,`v_y`) VALUES ('bullet',  '".microtime(1)."',  '".($user['x']+32)."',  '".($user['y']-32)."',  '0',  '-300');";
+      $query = "INSERT INTO  `objects` (`type` ,`lastupdate` ,`x` ,`y` ,`v_x` ,`v_y`, `owner`) VALUES ('bullet',  '".microtime(1)."',  '".($user['x']+32)."',  '".($user['y']-32)."',  '0',  '-300','".$input->uid."');";
       mysql_query($query) or die('Query failed: ' . mysql_error());
-      $query = "INSERT INTO  `objects` (`type` ,`lastupdate` ,`x` ,`y` ,`v_x` ,`v_y`) VALUES ('bullet',  '".microtime(1)."',  '".($user['x']-32)."',  '".($user['y']-32)."',  '0',  '-300');";
+      $query = "INSERT INTO  `objects` (`type` ,`lastupdate` ,`x` ,`y` ,`v_x` ,`v_y`, `owner`) VALUES ('bullet',  '".microtime(1)."',  '".($user['x']-32)."',  '".($user['y']-32)."',  '0',  '-300','".$input->uid."');";
       mysql_query($query) or die('Query failed: ' . mysql_error());
     }
   }
@@ -68,8 +68,11 @@ $pointsum = $line['SUM(points)'];
 $query = "SELECT COUNT(*) FROM `objects` WHERE `type` = 'enemy'";
 $result = mysql_query($query) or die('Query failed: ' . mysql_error());
 $line = mysql_fetch_array($result, MYSQL_ASSOC);
-if( $line['COUNT(*)'] < ($pointsum/100 + 10) ){
-  $query = "INSERT INTO  `objects` ( `type` , `lastupdate` , `x` ,  `y` ,  `v_x` , `v_y` ) VALUES (  'enemy',  '".microtime(1)."',  '".rand(32,800-32)."',  '-127',  '0',  '100' )";
+
+$max_enemy = ($pointsum/10 + 10);
+$data->console = $max_enemy;
+if( $line['COUNT(*)'] < $max_enemy ){
+  $query = "INSERT INTO  `objects` ( `type` , `lastupdate` , `x` ,  `y` ,  `v_x` , `v_y` ) VALUES (  'enemy',  '".microtime(1)."',  '".rand(32,800-32)."',  '-127',  '0',  '".(rand(50,150))."' )";
   mysql_query($query) or die('Query failed: ' . mysql_error());
 }
 
@@ -82,7 +85,7 @@ while($line = mysql_fetch_array($result, MYSQL_ASSOC)){
     if(distance($line,$line2) < 32){
       $query3 = "DELETE FROM `objects` WHERE `id` = '".$line['id']."' or `id` = '".$line2['id']."'";
       mysql_query($query3) or die('Query failed: ' . mysql_error());
-      $query3 = "UPDATE  `users` SET  `points` = `points` + 1 WHERE  `uid` = '".$input->uid."'";
+      $query3 = "UPDATE  `users` SET  `points` = `points` + 1 WHERE  `uid` = '".$line2['owner']."'";
       mysql_query($query3) or die('Query failed: ' . mysql_error());
     }
   }
