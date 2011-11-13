@@ -1,6 +1,8 @@
+debug = true
+
 require("json/json")
 server = {}
-require("servers")
+require("server")
 
 function love.load()
   img_player_center = love.graphics.newImage( "assets/player-center.png" )
@@ -54,9 +56,9 @@ function game_menu(options)
     love.graphics.print(v, x + x_indent, y + h + y_indent + (i - 1) * 64)  
   end
   style_instructions()
-  love.graphics.print("up | down: menu", x + x_indent, 600-80)
-  love.graphics.print("wasd: up left down right", x + x_indent, 600-64)
-  love.graphics.print("space: select | shoot", x + x_indent, 600-48)
+--  love.graphics.print("up | down: menu", x + x_indent, 600-80)
+--  love.graphics.print("wasd: up left down right", x + x_indent, 600-64)
+--  love.graphics.print("space: select | shoot", x + x_indent, 600-48)
   love.graphics.print("A josefnpat Production, bacongamejam 2011", x + x_indent, 600-32)
 end
 
@@ -77,7 +79,9 @@ function love.keypressed(key)
     end
   end
   if state == "title_screen" then
-    if key == " " then
+    if key == "escape" then
+      menu_select_option = 2
+    elseif key == " " then
       if menu_select_option == 0 then
         state = "join_server"
         join_server_buffer = ""
@@ -90,7 +94,9 @@ function love.keypressed(key)
       end
     end
   elseif state == "options" then
-    if key == " " then
+    if key == "escape" then
+      menu_select_option = 1
+    elseif key == " " then
       if menu_select_option == 0 then
         love.graphics.toggleFullscreen( )
       else -- if menu_select_option == 1
@@ -99,20 +105,39 @@ function love.keypressed(key)
       end
     end
   elseif state == "join_server" then
-    if in_table(key,{"0","1","2","3","4","5","6","7","8","9"}) then
-      join_server_buffer = join_server_buffer .. key
+    if key == "escape" then
+      menu_select_option = 1
     elseif key == " " then
       if menu_select_option == 0 then
-        
+        state = "game"
+        com_send_data = "info"
+        menu_select_option = 0
       else -- if menu_select_option == 1
         state = "title_screen"
         menu_select_option = 0
       end
     end
+  elseif state == "game" then
+    if key == "escape" then
+      state = "title_screen"
+    end
   end
 end
 
-com_send_data = "Hello Word"
+function love.update()
+  if state == "game" then
+    com_send()
+    local inc = com_recieve()
+    if debug then
+      if inc and inc ~= "" then
+        print(inc)
+      end
+    end
+    com_send_data = "info"
+  end
+end
+
+com_send_data = ""
 com_waiting = false
 function com_send()
   if not com_waiting then
@@ -130,12 +155,6 @@ function com_recieve()
       return receive
     end
   end
-end
-
-
-function love.update()
-  com_send()
-  local inc = com_recieve()
 end
 
 function style_title()
