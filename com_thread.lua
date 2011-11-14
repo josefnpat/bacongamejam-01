@@ -1,11 +1,11 @@
 debug = true
-
 function debug(msg)
   if debug then
     print("[com_thread]:"..msg)
   end
 end
-
+debug("running")
+require("love.filesystem")
 server = {}
 require("server")
 local http = require("socket.http")
@@ -15,7 +15,6 @@ function debug_delay(d)
   local t0 = socket.gettime()
   while socket.gettime() - t0 <= d do end
 end
-debug("running")
 while true do
   local input_data = this_thread:receive("input")
   if input_data then

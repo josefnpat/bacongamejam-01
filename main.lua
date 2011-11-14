@@ -250,6 +250,10 @@ bg_scroll = 0
 bg_scroll_dt = 0
 info = nil
 function love.update(dt)
+  local e = com:receive("error")
+  if e then
+    print("[com error]: "..e)
+  end
   bg_scroll_dt = bg_scroll_dt + dt
   if bg_scroll_dt > 0.01 then
     bg_scroll_dt = 0
