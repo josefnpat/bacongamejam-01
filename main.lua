@@ -5,7 +5,7 @@ function debug(msg)
   end
 end
 
-require("json/json")
+require("json")
 server = {}
 require("server")
 
