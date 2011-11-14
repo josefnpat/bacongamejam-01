@@ -1,6 +1,6 @@
-debug = true
+debug_messages = false
 function debug(msg)
-  if debug then
+  if debug_messages then
     print("[main]:"..msg)
   end
 end
@@ -71,7 +71,7 @@ function love.draw()
     style_instructions()
     love.graphics.print("Unknown State `"..state.."`", 0, 0)
   end
-  if debug then
+  if debug_messages then
     style_instructions()
     love.graphics.print("FPS:"..love.timer.getFPS( ),0,0);
   end

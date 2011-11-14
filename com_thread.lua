@@ -1,6 +1,6 @@
-debug = true
+debug_messages = false
 function debug(msg)
-  if debug then
+  if debug_messages then
     print("[com_thread]:"..msg)
   end
 end
