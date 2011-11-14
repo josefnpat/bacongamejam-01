@@ -8,10 +8,52 @@
 <div id="content">
   <h1>Flight 2942 Documentation</h1>
   <h2>Setting up a Server</h2>
-  <div class="ubuntu">
-  </div>
-  <div class="windows">
-  </div>
+  <p>Requirements:</p>
+  <ul>
+  <li>PHP</li>
+  <li>MySQL</li>
+  <li>A web host (apache, lynx, whatever)</li>
+  </ul>
+  <p>Performance off of the default server (http://cupm.net/public/bacongamejam-01/server.php) is very slow because it is from a BlueHost server. To increase performance, run it localhost on your machine. I've noticed the best performance happens when it is run over a network.</p>
+  <p>Provided is steps to installing a Flight 2942 server.</p>
+  <ol>
+  <h2><li>Upload server files.</h2>
+    <p>Copy <code>server.php</code> and <code>server-config.php</code> to a public directory. In this case, we will use <code>/var/www/</code>.</p>
+  </li>
+  <h2><li>Create a MySQL database and user.</h2>
+    <p>In this case, the database name will be <code>bacongamejam-01</code></p>
+    <p><i>Note: Since this software was made so quickly, I highly suggest you make a new user for this software, as I have not done any injection testing or protection.</i></p>
+  </li>
+  <h2><li>Import the database structure.</h2>
+    <p>Import or recreate the structre as defined by <code>structure.sql</code></p>
+  </li>
+  <h2><li>Configure the server.</h2>
+  <p>Configure <code>server-config.php</code> to properly connect the MySQL database.</p>
+  <p><i>Note: An easy way to check that the server is working is to visit the page via a browser, and see if the page returns "{}". If so, your server is properly set up. If not, an error message will show up.</i></p>
+  </li>
+  <h2><li>Configure the client to connect to the server.</h2>
+  <p>Currently, the game client reads from the <code>server.lua</code> file and uses that as the server. The cupm server connection (located in <code>server-cupm.lua</code>) looks like this:<p>
+<pre>
+  server.name = "cupm.net (Seppi)"
+  server.url = "http://cupm.net/public/bacongamejam-01/server.php"
+</pre>
+  <p>An example of connecting to the localhost (located in <code>server-localhost.lua</code>would be like this:</p>
+<pre>
+  server.name = "localhost"
+  server.url = "http://localhost/bacongamejam-01/server.php"
+</pre>
+  To set up <code>server.lua</code> for your server, you will need to name the server (<code>server.name</code>) and give it your url (<code>server.url</code>). The best way is to find your outbound IP address, and use that. e.g. :
+<pre>
+  server.name = "Foo's Internal Server"
+  server.url = "http://192.168.1.2/bacongamejam-01/server.php"
+</pre>
+  <div class="ubuntu">To find your ip address, open up a terminal and type <code>ifconfig</code>.</div>
+  <div class="windows">To find your ip address, open up a terminal and type <code>ipconfig</code>.</div>
+  <h2><li>Play Flight 2942</h2>
+  And that's all folks! Have fun. Just connect, and go.
+  </li>
+  </li>
+  </ol>
 </div>
 </body>
 </html>
