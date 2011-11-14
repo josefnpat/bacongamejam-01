@@ -1,4 +1,10 @@
 debug = true
+function debug(msg)
+  if debug then
+    print("[main]:"..msg)
+  end
+end
+
 require("json/json")
 server = {}
 require("server")
@@ -22,6 +28,7 @@ function love.load()
   game_name = love.graphics.getCaption( )
   menu_select_option = 0
   com = love.thread.newThread( "dl", "com_thread.lua" )
+  debug("Starting Thread..")
   com:start()
 end
 
@@ -291,6 +298,7 @@ com_send_data = {}
 com_waiting = false
 function com_send()
   if not com_waiting then
+    debug("send data ["..json.encode(com_send_data).."]")
     com_waiting = true
     com:send("input",json.encode(com_send_data));
     com_send_data = {}
@@ -302,6 +310,7 @@ function com_recieve()
     local receive = com:receive("output");
     if receive then
       com_waiting = false
+      debug("receive data ["..receive.."]")
       return receive
     end
   end
