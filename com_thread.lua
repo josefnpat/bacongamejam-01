@@ -9,7 +9,7 @@ end
 server = {}
 require("server")
 local http = require("socket.http")
-local this_thread = love.thread.getThread("dl")
+local this_thread = love.thread.getThread("com")
 
 function debug_delay(d)
   local t0 = socket.gettime()

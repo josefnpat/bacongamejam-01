@@ -27,7 +27,7 @@ function love.load()
   state = "title_screen"
   game_name = love.graphics.getCaption( )
   menu_select_option = 0
-  com = love.thread.newThread( "dl", "com_thread.lua" )
+  com = love.thread.newThread( "com", "com_thread.lua" )
   debug("Starting Thread..")
   com:start()
 end
