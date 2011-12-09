@@ -104,8 +104,7 @@ function distance($obj1,$obj2){
 if(@$input->cmd == "info"){
   $data->uid = md5(uniqid()."salt");
   $data->console = "$welcome_message ".uniqid();
-  $query = "INSERT INTO `users` (`uid` ,`health` ,`maxhealth` ,`lastupdate` ,`x` ,`y` ,`v_x` ,`v_y`) VALUES
-  ('".$data->uid."',  '5',  '5',  '".microtime(1)."',  '400',  '550',  '0',  '0')";
+  $query = "INSERT INTO `users` (`uid` ,`health` ,`maxhealth` ,`lastupdate` ,`x` ,`y` ,`v_x` ,`v_y`) VALUES  ('".$data->uid."',  '5',  '5',  '".microtime(1)."',  '400',  '550',  '0',  '0')";
   mysql_query($query) or die('Query failed: ' . mysql_error());
 } elseif(@$input->cmd == "pull") {
   $query = 'SELECT * FROM users WHERE '.microtime(1).' - lastupdate < 2';
@@ -167,3 +166,4 @@ if(@$input->cmd == "info"){
 }
 echo json_encode($data);
 ?>
+
