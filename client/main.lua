@@ -192,7 +192,7 @@ function love.keypressed(key)
         state = "options"
         menu_select_option = 0
       else -- menu_select_option == 2
-        love.event.push("q")
+        love.event.quit()
       end
     end
   elseif state == "options" then
@@ -250,7 +250,7 @@ bg_scroll = 0
 bg_scroll_dt = 0
 info = nil
 function love.update(dt)
-  local e = com:receive("error")
+  local e = com:get("error")
   if e then
     print("[com error]: "..e)
   end
@@ -304,14 +304,14 @@ function com_send()
   if not com_waiting then
     debug("send data ["..json.encode(com_send_data).."]")
     com_waiting = true
-    com:send("input",json.encode(com_send_data));
+    com:set("input",json.encode(com_send_data));
     com_send_data = {}
   end
 end
 
 function com_recieve()
   if com_waiting == true then
-    local receive = com:receive("output");
+    local receive = com:get("output");
     if receive then
       com_waiting = false
       debug("receive data ["..receive.."]")

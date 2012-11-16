@@ -16,14 +16,14 @@ function debug_delay(d)
   while socket.gettime() - t0 <= d do end
 end
 while true do
-  local input_data = this_thread:receive("input")
+  local input_data = this_thread:get("input")
   if input_data then
     local url = server.url .. "?i=" .. input_data
     debug("receive data from ["..url.."]")
     server_data = http.request(url)
     --debug_delay(0.02) --add 120ms delay
     debug("send data ["..server_data.."]")
-    this_thread:send("output", server_data)
+    this_thread:set("output", server_data)
   end
 end
 
